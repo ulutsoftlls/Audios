@@ -1,0 +1,29 @@
+{% extends 'analyzer/base.html' %}
+{% load static %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="row">
+            <div class="col">
+              <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-group analyzer-button">
+                        <button type="submit" class="btn btn-primary" id="registerBtn" >Катталуу</button>
+                    </div>
+              </form>
+
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

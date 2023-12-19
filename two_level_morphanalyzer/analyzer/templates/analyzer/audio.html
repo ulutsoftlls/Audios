@@ -1,0 +1,50 @@
+{% extends 'analyzer/base.html' %}
+{% load static %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="row">
+            <div class="col">
+
+                <p class="lead" style="font-size: 18px;">Аудио-файлды угуп, текст жазыңыз</p>
+                {% if is_not_valid %}
+                <h5 style="color: red">Текст өтө узун. Максимум 200 символ</h5>
+                {% endif%}
+                <p>{{audio_file_url}}</p>
+                <p>ID: {{audio_id}}</p>
+                <p>Сиз {{finished_sound_number}} аудиозапись жаздыңыз</p>
+                <audio controls style="width: 350px">
+                                      <source src={{audio_file_url}} type="audio/mpeg">
+                </audio>
+                {% if text %}
+                <h5 >Мурунку текст: </h5>
+                <p style='width: 80%; word-wrap: break-word;'>{{text}}</p>
+                {% endif%}
+                <form action="{% url 'text' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                {{ form.as_p }}
+
+                    <div class="form-group ">
+                        <button type="submit" class="btn btn-primary analyzer-button" style="display: block; margin-left: auto; margin-right: auto; " id="submitBtn">Жөнөтүү</button>
+                    </div>
+                    {% if audio_file_url %}
+                            <input type="hidden" name="audio_id" value="{{ audio_id }}">
+                    {% endif%}
+                    <input type="hidden" name="audio_id" value="{{ audio_id }}">
+                    <input type="hidden" name="audio_file" value="{{ audio_file_url }}">
+                </form>
+
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

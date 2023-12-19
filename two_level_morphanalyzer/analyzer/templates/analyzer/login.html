@@ -1,0 +1,38 @@
+{% extends 'analyzer/base.html' %}
+{% load static %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="row">
+            <div class="col">
+<!--                {% if user_not_found %}-->
+<!--                <h2 style="color: red">Колдонуучу {{user_name}} аты менен жок. Кайра башка ат менен кирип көрүңүз </h2>-->
+
+<!--                {% endif%}-->
+                {% if error %}
+                <h4 style="color: red">Форманы толтурууда ката чыкты. Кайра аракет кылыңыз </h4>
+
+                {% endif%}
+            <form action="{% url 'login' %}" method="post" enctype="multipart/form-data" >
+              {% csrf_token %}
+                <p>Универ таңдаңыз:</p>
+                {{ form.univer_name }}
+                <br><br>
+                {{ form.user_name }}
+
+                  <div class="form-group ">
+                        <button type="submit" class="btn btn-primary analyzer-button" id="submitBtn2" >Кирүү</button>
+                    </div>
+            </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

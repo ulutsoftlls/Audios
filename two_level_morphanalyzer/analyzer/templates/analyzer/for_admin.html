@@ -1,0 +1,38 @@
+{% extends 'analyzer/base.html' %}
+{% load static %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block content %}
+
+<section id="hero" class="d-flex align-items-center">
+    <div class="container">
+      <h3>All audios</h3>
+        <table>
+          <tr>
+            <td>ID</td>
+            <td>Audio</td>
+            <td>Text</td>
+            <td>SuperVisor</td>
+            <td>UserName</td>
+            <td>Admin</td>
+            <td>Status</td>
+          </tr>
+          {% for audio in all %}
+          <tr>
+            <td>{{audio.id}}</td>
+            <td>{{audio.audio_file}}</td>
+            <td>{{audio.text}}</td>
+            <td>{{audio.super_visor}}</td>
+            <td>{{audio.user_name}}</td>
+            <td>{{audio.admin}}</td>
+            <td>{{audio.status}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+    </div>
+</section>
+
+{% endblock content %}
