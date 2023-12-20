@@ -15,7 +15,7 @@
 <!--                <h2 style="color: red">Колдонуучу {{user_name}} аты менен жок. Кайра башка ат менен кирип көрүңүз </h2>-->
 
 <!--                {% endif%}-->
-                {% if error %}
+                {% if form_error %}
                 <h4 style="color: red">Форманы толтурууда ката чыкты. Кайра аракет кылыңыз </h4>
 
                 {% endif%}
@@ -25,7 +25,11 @@
                 {{ form.univer_name }}
                 <br><br>
                 {{ form.user_name }}
-
+                <br>
+                {{ form.captcha }}
+                {% for error in form.captcha.errors %}
+                <p> {{ error }} </p>
+                {% endfor %}
                   <div class="form-group ">
                         <button type="submit" class="btn btn-primary analyzer-button" id="submitBtn2" >Кирүү</button>
                     </div>

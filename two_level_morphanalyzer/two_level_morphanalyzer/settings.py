@@ -42,7 +42,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     "debug_toolbar",
+    'captcha',
+    'django_recaptcha',
 ]
+
+RECAPTCHA_PUBLIC_KEY = '6Le0gTcpAAAAALzuAONk-JVyufaywC61-WYpkyJE'
+RECAPTCHA_PRIVATE_KEY = '6Le0gTcpAAAAAHP3dxc1Ql6j1NHDN7kAU3cvMXCW'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

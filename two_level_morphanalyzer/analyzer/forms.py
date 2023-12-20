@@ -3,9 +3,10 @@ from django.contrib.admin.widgets import AutocompleteSelect
 from django.contrib import admin
 from .models import Audios, Univers
 from django.core.exceptions import ValidationError
-
+from django_recaptcha.fields import ReCaptchaField
 
 class User_nameForm(forms.Form):
+    captcha = ReCaptchaField(label='')
     user_name = forms.CharField(max_length=20,
                                 widget=forms.TextInput(
                                     attrs={'class': 'form-control',
@@ -36,7 +37,7 @@ class MyModel(forms.ModelForm):
 
 
 class TextForm(forms.ModelForm):
-
+    #captcha2 = ReCaptchaField(label='', )
     #text = forms.CharField(label='Enter Text', widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     class Meta:
         model = Audios

@@ -337,13 +337,13 @@ def login(request):
                         'text': False
                     }
                 return render(request, "analyzer/audio.html", context=context)
-        form = User_nameForm()
+        form = User_nameForm(request.POST)
         # user_not_found = True
         context = {
             'title': "Кирүү",
             'navbar': navbar,
             'form': form,
-            'error': True
+            'form_error': True
             # 'user_name': user_name,
             # 'user_not_found': user_not_found
         }
