@@ -1,6 +1,7 @@
 /*.column-audio_file {*/
 /*    width: 50px;*/
 /*}*/
-table#result_list td:nth-child(2) {
-    width: 15em;
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
 }
