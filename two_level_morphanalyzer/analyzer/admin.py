@@ -10,14 +10,20 @@ from django.urls import path
 from django import forms
 from .models import Audios, Users, Univers
 from django.utils.html import format_html
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
+from import_export.formats import base_formats
 
+class AudiosResource(resources.ModelResource):
+    class Meta:
+        model = Audios
+        fields = ('audio_file', 'text')
+        export_order = ('audio_file', 'text')
+        #formats = (base_formats.CSV, base_formats.XLS, base_formats.XLSX)
 
-
-
-
-
-class AudiosAdmin(admin.ModelAdmin):
+class AudiosAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     #form = MyModel
+    resource_class = AudiosResource
     list_display = ('id', 'get_audio', 'get_text', 'super_visor', 'get_user_name', 'status', 'is_correct', 'sound_display')
     list_display_links = ('id', 'get_audio')
     search_fields = ('get_audio','super_visor', 'user_name', 'status')
@@ -30,6 +36,13 @@ class AudiosAdmin(admin.ModelAdmin):
             'all': ('analyzer/css/fancy.css',)
         }
 
+    # def get_export_fields(self):
+    #     # Specify the fields to export
+    #     return ('audio_file', 'text')
+    #
+    def get_export_queryset(self, request):
+        # Apply additional filters to the queryset
+        return super().get_export_queryset(request).filter(status=True, is_correct=True)
     def get_audio(self, object):
         if object.audio_file:
             wav_name = str(object.audio_file)
@@ -47,8 +60,8 @@ class AudiosAdmin(admin.ModelAdmin):
     def sound_display(self, item):
         return item.sound_display
     def save_model(self, request, obj, form, change):
-        print(obj.status)
-        print(obj.is_correct)
+        # print(obj.status)
+        # print(obj.is_correct)
         if not obj.is_correct and change and 'is_correct' in form.changed_data:
             #if sound must be overwritten
             user_name = str(obj.user_name)
@@ -114,7 +127,7 @@ class AudiosAdmin(admin.ModelAdmin):
     get_user_name.short_description = 'User name'
     get_audio.short_description = 'Audio'
 
-class UsersAdmin(admin.ModelAdmin):
+class UsersAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     # form = MyModel
     list_display = (
     'id', 'univer_name', 'user_name', 'written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
@@ -135,7 +148,7 @@ class UsersAdmin(admin.ModelAdmin):
         #     # Сохраняем модель
         #     super().save_model(request, obj, form, change)
 
-class UniversAdmin(admin.ModelAdmin):
+class UniversAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     # form = MyModel
     list_display = ('id', 'univer_name', 'written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
     list_display_links = ('id',)

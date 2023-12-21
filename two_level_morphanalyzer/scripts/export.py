@@ -14,7 +14,7 @@ from datetime import datetime
 #print(all_files_in_directory)
 
 def run():
-        data = Audios.objects.values_list('audio_file', 'text').filter(status=False, is_correct=True)
+        data = Audios.objects.values_list('audio_file', 'text').filter(status=True, is_correct=True)
 
         # Create a new Excel workbook
         wb = openpyxl.Workbook()

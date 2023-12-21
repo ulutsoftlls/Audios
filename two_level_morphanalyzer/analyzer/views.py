@@ -287,8 +287,8 @@ def login(request):
                 return render(request, "analyzer/audio.html", context=context)
 
             else:
-                print('not found')
-                print(request.session['name'])
+                # print('not found')
+                # print(request.session['name'])
                 created = Users.objects.create(user_name=request.session['name'])
                 created.save()
                 Users.objects.filter(user_name=request.session['name']).update(univer_name=request.session['univer_id'])

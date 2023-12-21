@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+from import_export.formats.base_formats import CSV, XLSX
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,8 +46,9 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'captcha',
     'django_recaptcha',
+    'import_export',
 ]
-
+EXPORT_FORMATS = [CSV, XLSX]
 RECAPTCHA_PUBLIC_KEY = '6Le0gTcpAAAAALzuAONk-JVyufaywC61-WYpkyJE'
 RECAPTCHA_PRIVATE_KEY = '6Le0gTcpAAAAAHP3dxc1Ql6j1NHDN7kAU3cvMXCW'
 
@@ -149,9 +152,4 @@ MEDIA_URL = '/media/'
 INTERNAL_IPS = [
     "127.0.0.1", '80.72.180.130'
 ]
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'audios_cache'),
-    }
-}
+
