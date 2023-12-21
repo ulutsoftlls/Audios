@@ -43,12 +43,12 @@ class TextForm(forms.ModelForm):
         model = Audios
         fields = ['text']
         widgets = {
-            'text': forms.Textarea(attrs={ "style": "height:150px; width:80%", 'max_length':'400', 'class': 'form-control', 'placeholder':"Текст жазыңыз", 'required':'required'})
+            'text': forms.Textarea(attrs={ "style": "height:150px; width:80%", 'max_length':'400', 'class': 'form-control', 'placeholder':"Бул жерге жазыңыз...", 'required':'required'})
 
         }
     def clean_text(self):
         text = str(self.cleaned_data['text'])
-        if len(text) > 200:
+        if len(text) > 250:
             raise ValidationError('Кайра жазыңыз')
         return text
     # def __init__(self, *args, **kwargs):

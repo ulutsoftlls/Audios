@@ -27,7 +27,10 @@ body {
     color: #206bfb;
     opacity: 0.6;
 }
+.plyr {
+  width: 350px;
 
+}
 /*Navbar Styling*/
 header #navbar {
     padding: 20px 0;

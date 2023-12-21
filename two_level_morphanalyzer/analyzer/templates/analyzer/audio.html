@@ -19,14 +19,14 @@
 {#                <p>{{audio_file_url}}</p>#}
                 <p>ID: {{audio_id}}</p>
                 <p>Сиз {{finished_sound_number}} аудиозапись жаздыңыз</p>
-                <audio controls style="width: 350px">
+                <audio controls id="audioPlayer" style="width: 350px">
                                       <source src={{audio_file_url}} type="audio/mpeg">
                 </audio>
                 {% if text %}
                 <h5 >Мурунку текст: </h5>
                 <p style='width: 80%; word-wrap: break-word;'>{{text}}</p>
                 {% endif%}
-                <p>Текст жазыңыз: (максимум 200 символ)</p>
+                <p>Текст жазыңыз: <span id="charCount">0</span>/250</p>
                 <form action="{% url 'text' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                 {{ form.text }}
@@ -57,6 +57,33 @@
         </div>
     </div>
 </section>
+    <script src="https://cdn.plyr.io/3.6.2/plyr.js"></script>
+<script>
+    // Function to count characters in the textarea and update the count
+    function countCharacters() {
+        var textarea = document.querySelector('textarea[name="text"]');
+        var charCount = document.getElementById("charCount");
+        var text = textarea.value;
+        var count = text.length;
+        charCount.textContent = count;
+    }
 
+    // Add an event listener to the textarea for input changes
+    document.querySelector('textarea[name="text"]').addEventListener('input', countCharacters);
+
+    // Trigger the initial character count
+    countCharacters();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const player = new Plyr('#audioPlayer', {
+            controls: ['play', 'duration', 'progress', 'current-time', 'mute', 'settings', 'speed'],
+            speed: {
+                selected: 1, // Выбранная скорость по умолчанию (1x)
+                options: [0.5, 1, 1.5, 2] // Варианты доступных скоростей
+            },
+
+        });
+    });
+</script>
 
 {% endblock %}
