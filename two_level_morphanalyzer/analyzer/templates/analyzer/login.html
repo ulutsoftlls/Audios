@@ -21,7 +21,6 @@
                 {% endif%}
             <form action="{% url 'login' %}" method="post" enctype="multipart/form-data" >
               {% csrf_token %}
-                <p>Универ таңдаңыз:</p>
                 {{ form.univer_name }}
                 <br><br>
                 {{ form.user_name }}
@@ -31,7 +30,7 @@
                 <p> {{ error }} </p>
                 {% endfor %}
                   <div class="form-group ">
-                        <button type="submit" class="btn btn-primary analyzer-button" id="submitBtn2" >Кирүү</button>
+                        <button type="submit" class="btn btn-primary login-button" id="submitBtn2" >Кирүү</button>
                     </div>
             </form>
             </div>

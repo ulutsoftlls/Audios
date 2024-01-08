@@ -114,36 +114,112 @@ def text(request):
         if not audio_id:
             redirect('home')
         form = TextForm(request.POST)
-        if form.is_valid():
+        if 'main_sumbit' in request.POST:
+            if form.is_valid() and not form.cleaned_data['text']:
+                #the form is empty
+                context = {
+                    'title': 'Угуп жазуу',
+                    'navbar': navbar,
+                    'form': form,
+                    'audio_id': audio_id,
+                    'audio_file_url': audio_file_url,
+                    'finished_sound_number': request.session['s_num'],
+                    'form_empty': True
+                }
+                # return redirect("audio", audio_id=audio_id[0])
+                return render(request, "analyzer/audio.html", context=context)
+            if form.is_valid():
+                #print(request.session['user_id'])
+                #print(user_name_id)
+                qset = Audios.objects.values('is_correct').filter(id=audio_id,status=False).first()
+                if not qset['is_correct']:
+                    Audios.objects.filter(id=audio_id).update(text=text, is_correct=True, user_name=request.session['user_id'])
 
-            #print(request.session['user_id'])
-            #print(user_name_id)
-            qset = Audios.objects.values('is_correct').filter(id=audio_id,status=False).first()
+                    #print(request.session['s_num'])
+                    request.session['s_num'] = Users.objects.values('written_s_num').filter(
+                        id=request.session['user_id']).first()
+                    request.session['s_num'] = int(request.session['s_num']['written_s_num'])+ 1
+                    Users.objects.filter(id=request.session['user_id']).update(written_s_num=request.session['s_num'])
+
+                    request.session['fin_num'] = Users.objects.values('finished_s_num').filter(
+                        id=request.session['user_id']).first()
+                    request.session['fin_num'] = int(request.session['fin_num']['finished_s_num']) + 1
+                    Users.objects.filter(id=request.session['user_id']).update(finished_s_num=request.session['fin_num'])
+
+                    request.session['univ_num'] = Univers.objects.values('written_s_num').filter(id=request.session['univer_id']).first()
+                    request.session['univ_num'] = int(request.session['univ_num']['written_s_num']) + 1
+                    Univers.objects.filter(id=request.session['univer_id']).update(written_s_num=request.session['univ_num'])
+
+                    request.session['finished_s_num'] = Univers.objects.values('finished_s_num').filter(
+                        id=request.session['univer_id']).first()
+                    request.session['finished_s_num'] = int(request.session['finished_s_num']['finished_s_num']) + 1
+                    Univers.objects.filter(id=request.session['univer_id']).update(finished_s_num=request.session['finished_s_num'])
+                qset = Audios.objects.values('pk').filter(status=False, is_correct=False)
+                # request.session['s_id_list'] = list(qset)
+                # #print(request.session['s_id_list'])
+                if not qset:
+                    context = {
+                        'no_audio': True,
+                        'title': 'Башкы бет',
+                        'navbar': navbar,
+                        'user_name': request.session['name']
+                    }
+                    return render(request, "analyzer/index.html", context=context)
+                request.session['audios_id'] = random.choice(list([i['pk'] for i in list(qset)]))
+                qset2 = Audios.objects.values('audio_file', 'text').filter(id=request.session['audios_id']).first()
+                request.session['audio_url'] = qset2['audio_file']
+                request.session['audio_url'] = MEDIA_URL + request.session['audio_url']
+                if qset2['text']:
+                    form = TextForm(initial={'text': str(qset2['text'])})
+                    #form = TextForm()
+                    context = {
+                        'title': 'Угуп жазуу',
+                        'navbar': navbar,
+                        'form': form,
+                        'audio_id': request.session['audios_id'],
+                        'audio_file_url': request.session['audio_url'],
+                        'is_not_valid': False,
+                        'finished_sound_number': request.session['s_num'],
+                        'text': qset2['text']
+                    }
+                    # return redirect("audio", audio_id=audio_id[0])
+                    return render(request, "analyzer/audio.html", context=context)
+                else:
+
+                    form = TextForm()
+                    context = {
+                        'title': 'Угуп жазуу',
+                        'navbar': navbar,
+                        'form': form,
+                        'audio_id': request.session['audios_id'],
+                        'audio_file_url': request.session['audio_url'],
+                        'is_not_valid': False,
+                        'finished_sound_number': request.session['s_num'],
+                        'text': False
+                    }
+                    # return redirect("audio", audio_id=audio_id[0])
+                    return render(request, "analyzer/audio.html", context=context)
+                # return redirect("audio", audio_id=request.session['audios_id'])
+            else:
+                # print('form is not valid')
+                context = {
+                    'title': 'Угуп жазуу',
+                    'navbar': navbar,
+                    'form': form,
+                    'audio_id': audio_id,
+                    'audio_file_url': audio_file_url,
+                    'is_not_valid': True
+                }
+                # return redirect("audio", audio_id=audio_id[0])
+                return render(request, "analyzer/audio.html", context=context)
+        elif 'not_understand' in request.POST:
+            text = '*'
+            qset = Audios.objects.values('is_correct').filter(id=audio_id, status=False).first()
             if not qset['is_correct']:
-                Audios.objects.filter(id=audio_id).update(text=text, is_correct=True, user_name=request.session['user_id'])
+                Audios.objects.filter(id=audio_id).update(text=text, is_correct=True,
+                                                          user_name=request.session['user_id'])
 
-                #print(request.session['s_num'])
-                request.session['s_num'] = Users.objects.values('written_s_num').filter(
-                    id=request.session['user_id']).first()
-                request.session['s_num'] = int(request.session['s_num']['written_s_num'])+ 1
-                Users.objects.filter(id=request.session['user_id']).update(written_s_num=request.session['s_num'])
-
-                request.session['fin_num'] = Users.objects.values('finished_s_num').filter(
-                    id=request.session['user_id']).first()
-                request.session['fin_num'] = int(request.session['fin_num']['finished_s_num']) + 1
-                Users.objects.filter(id=request.session['user_id']).update(finished_s_num=request.session['fin_num'])
-
-                request.session['univ_num'] = Univers.objects.values('written_s_num').filter(id=request.session['univer_id']).first()
-                request.session['univ_num'] = int(request.session['univ_num']['written_s_num']) + 1
-                Univers.objects.filter(id=request.session['univer_id']).update(written_s_num=request.session['univ_num'])
-
-                request.session['finished_s_num'] = Univers.objects.values('finished_s_num').filter(
-                    id=request.session['univer_id']).first()
-                request.session['finished_s_num'] = int(request.session['finished_s_num']['finished_s_num']) + 1
-                Univers.objects.filter(id=request.session['univer_id']).update(finished_s_num=request.session['finished_s_num'])
             qset = Audios.objects.values('pk').filter(status=False, is_correct=False)
-            # request.session['s_id_list'] = list(qset)
-            # #print(request.session['s_id_list'])
             if not qset:
                 context = {
                     'no_audio': True,
@@ -184,19 +260,7 @@ def text(request):
                 }
                 # return redirect("audio", audio_id=audio_id[0])
                 return render(request, "analyzer/audio.html", context=context)
-            # return redirect("audio", audio_id=request.session['audios_id'])
-        else:
-            # print('form is not valid')
-            context = {
-                'title': 'Угуп жазуу',
-                'navbar': navbar,
-                'form': form,
-                'audio_id': audio_id,
-                'audio_file_url': audio_file_url,
-                'is_not_valid': True
-            }
-            # return redirect("audio", audio_id=audio_id[0])
-            return render(request, "analyzer/audio.html", context=context)
+
     else:
         form = TextForm(request.POST)
         context = {
@@ -245,6 +309,7 @@ def login(request):
                 request.session['user_id'] = qset['pk']
                 request.session['s_num'] = Users.objects.values('written_s_num').filter(
                     id=request.session['user_id']).first()
+                request.session['s_num'] = request.session['s_num']['written_s_num']
                 # print('name is exist')
                 qset = Audios.objects.values('pk').filter(status=False, is_correct=False)
                 # request.session['s_id_list'] = list(qset)
@@ -270,7 +335,7 @@ def login(request):
                         'audio_id': request.session['audios_id'],
                         'audio_file_url': request.session['audio_url'],
                         'is_not_valid': False,
-                        'finished_sound_number': request.session['s_num']['written_s_num'],
+                        'finished_sound_number': request.session['s_num'],
                         'text': qset['text']
                     }
                 else:
@@ -281,7 +346,7 @@ def login(request):
                         'audio_id': request.session['audios_id'],
                         'audio_file_url': request.session['audio_url'],
                         'is_not_valid': False,
-                        'finished_sound_number': request.session['s_num']['written_s_num'],
+                        'finished_sound_number': request.session['s_num'],
                         'text': False
                     }
                 return render(request, "analyzer/audio.html", context=context)
@@ -297,6 +362,7 @@ def login(request):
                 request.session['user_id'] = qset['pk']
                 request.session['s_num'] = Users.objects.values('written_s_num').filter(
                     id=request.session['user_id']).first()
+                request.session['s_num'] = request.session['s_num']['written_s_num']
                 # print('name is not exist')
                 qset = Audios.objects.values('pk').filter(status=False, is_correct=False)
                 # request.session['s_id_list'] = list(qset)
@@ -322,7 +388,7 @@ def login(request):
                         'audio_id': request.session['audios_id'],
                         'audio_file_url': request.session['audio_url'],
                         'is_not_valid': False,
-                        'finished_sound_number': request.session['s_num']['written_s_num'],
+                        'finished_sound_number': request.session['s_num'],
                         'text': qset['text']
                     }
                 else:
@@ -333,7 +399,7 @@ def login(request):
                         'audio_id': request.session['audios_id'],
                         'audio_file_url': request.session['audio_url'],
                         'is_not_valid': False,
-                        'finished_sound_number': request.session['s_num']['written_s_num'],
+                        'finished_sound_number': request.session['s_num'],
                         'text': False
                     }
                 return render(request, "analyzer/audio.html", context=context)

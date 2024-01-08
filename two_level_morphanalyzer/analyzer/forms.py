@@ -18,11 +18,19 @@ class User_nameForm(forms.Form):
 
 
     # Использование ChoiceField с виджетом RadioSelect
-    univers = Univers.objects.values_list('univer_name', flat=True)
-    univer_name = forms.ChoiceField(choices=[(name, name) for name in univers],
-        #widget=forms.RadioSelect(),
-        label='Выберите один вариант:'
-    )
+    #univers = Univers.objects.values_list('univer_name', flat=True)
+    univer_name = forms.ChoiceField(label='Выберите один вариант:',
+                                    widget=forms.Select(attrs={'class': 'custom-select'}
+                                                        ))
+
+    def __init__(self, *args, **kwargs):
+        super(User_nameForm, self).__init__(*args, **kwargs)
+        self.fields['univer_name'].choices = self.get_univer_choices()
+
+    def get_univer_choices(self):
+        choices = [('', 'Универ таңдаңыз...')]  # Empty value for "none" option
+        choices += [(name, name) for name in Univers.objects.values_list('univer_name', flat=True)]
+        return choices
 class MyModel(forms.ModelForm):
     class Meta:
         fields = ('text',)
@@ -43,12 +51,12 @@ class TextForm(forms.ModelForm):
         model = Audios
         fields = ['text']
         widgets = {
-            'text': forms.Textarea(attrs={ "style": "height:150px; width:80%", 'max_length':'400', 'class': 'form-control', 'placeholder':"Бул жерге жазыңыз...", 'required':'required'})
+            'text': forms.Textarea(attrs={ "style": "height:150px;", 'max_length':'400', 'class': 'form-control textarea-style', 'placeholder':"Бул жерге жазыңыз...", 'required':False})
 
         }
     def clean_text(self):
         text = str(self.cleaned_data['text'])
-        if len(text) > 250:
+        if len(text) > 300:
             raise ValidationError('Кайра жазыңыз')
         return text
     # def __init__(self, *args, **kwargs):

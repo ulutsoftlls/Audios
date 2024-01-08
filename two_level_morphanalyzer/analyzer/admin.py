@@ -26,8 +26,8 @@ class AudiosAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     resource_class = AudiosResource
     list_display = ('id', 'get_audio', 'get_text', 'super_visor', 'get_user_name', 'status', 'is_correct', 'sound_display')
     list_display_links = ('id', 'get_audio')
-    search_fields = ('get_audio','super_visor', 'user_name', 'status')
-    list_filter = ('status','is_correct','super_visor', 'user_name')
+    search_fields = ('id','text','super_visor', 'user_name__user_name', 'status')
+    list_filter = ('status','is_correct', 'user_name')
     list_editable = ('status', 'is_correct')
     fields = ('audio_file','text','super_visor', 'user_name', 'status', 'is_correct')
     #prepopulated_fields = {"slug": ("audio_file",)}
@@ -132,7 +132,7 @@ class UsersAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = (
     'id', 'univer_name', 'user_name', 'written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
     list_display_links = ('id',)
-    search_fields = ('univer_name', 'user_name',)
+    search_fields = ('id','univer_name__univer_name', 'user_name',)
     list_filter = ('univer_name', 'user_name',)
     list_editable = ('written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
     fields = ('univer_name', 'user_name', 'written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
@@ -152,7 +152,7 @@ class UniversAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     # form = MyModel
     list_display = ('id', 'univer_name', 'written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
     list_display_links = ('id',)
-    search_fields = ('univer_name',)
+    search_fields = ('id','univer_name',)
     list_filter = ('univer_name',)
     list_editable = ('written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')
     fields = ('univer_name', 'written_s_num', 'incorrect_s_num', 'finished_s_num', 'correct_s_num')

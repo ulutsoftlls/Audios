@@ -12,7 +12,7 @@
             <div class="row">
             <div class="col">
 
-                <p class="lead" style="font-size: 18px;">Аудио-файлды угуп, текст жазыңыз</p>
+                <p class="lead" style="font-size: 18px;">Аудиозаписти угуп, текст жазыңыз</p>
                 {% if is_not_valid %}
                 <h5 style="color: red">Форманы толтурууда ката чыкты. Кайра аракет кылыңыз</h5>
                 {% endif%}
@@ -22,25 +22,36 @@
                 <audio controls id="audioPlayer" style="width: 350px">
                                       <source src={{audio_file_url}} type="audio/mpeg">
                 </audio>
-                {% if text %}
-                <h5 >Мурунку текст: </h5>
-                <p style='width: 80%; word-wrap: break-word;'>{{text}}</p>
-                {% endif%}
-                <p>Текст жазыңыз: <span id="charCount">0</span>/250</p>
+
+
                 <form action="{% url 'text' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
+                <div class="col-sm-1">
+                <div class="form-group ">
+                        <button type="submit" name="not_understand" class="btn btn-secondary" style="
+                         margin: 20px; width: 100px; font-size: 16px; font-weight: bold; height: 30px; padding: 0" id="submitBtn">Түшүнүксүз</button>
+                    </div>
+                </div>
+                {% if text %}
+                <p >Мурунку текст: </p>
+{#                <p style='width: 80%; word-wrap: break-word;'>{{text}}</p>#}
+                {% endif%}
+                <p>Текст жазыңыз: <span id="charCount">0</span>/300</p>
+                {% if form_empty %}
+                <h5 style="color: red">Форманы толтуруу талап кылынат</h5>
+                {% endif%}
                 {{ form.text }}
                      <br>
                 <div class="row">
-                <div class="col-sm-4">
+{#                <div class="col-sm-4">#}
 {#                    {{ form.captcha2 }}#}
 {#                {% for error in form.captcha2.errors %}#}
 {#                <p> {{ error }} </p>#}
 {#                {% endfor %}#}
-                </div>
+{#                </div>#}
                 <div class="col-sm-3">
                     <div class="form-group ">
-                        <button type="submit" class="btn btn-primary analyzer-button" style="display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px" id="submitBtn">Жөнөтүү</button>
+                        <button type="submit" name="main_sumbit" class="btn btn-primary analyzer-button" id="submitBtn">Жөнөтүү</button>
                     </div>
                     </div>
                 </div>
@@ -76,7 +87,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const player = new Plyr('#audioPlayer', {
-            controls: ['play', 'duration', 'progress', 'current-time', 'mute', 'settings', 'speed'],
+            controls: ['play', 'duration', 'progress', 'current-time', 'settings', 'speed'],
             speed: {
                 selected: 1, // Выбранная скорость по умолчанию (1x)
                 options: [0.5, 0.75, 1, 1.5] // Варианты доступных скоростей
