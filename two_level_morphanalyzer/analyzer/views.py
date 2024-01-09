@@ -32,7 +32,6 @@ from django.db.models import Max
 navbar = [
           {'title': 'Кирүү', 'url': 'login'},
           ]
-user_names = ['user01','user02','user03','user04','user05']
 
 context = {}
 
