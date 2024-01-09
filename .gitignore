@@ -8,3 +8,8 @@
 /dataSources.local.xml
 media/*/*.mp3
 media/*/*.wav
+two_level_morphanalyzer/media/*/*.mp3
+two_level_morphanalyzer/media/*/*.wav
+__pycache__/
+migrations/__pycache__/
+.idea/
